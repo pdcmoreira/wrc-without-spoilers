@@ -1,0 +1,75 @@
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.toggle-control {
+  display: block;
+  position: relative;
+  height: 20px;
+  padding-left: 42px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.toggle-control .control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 42px;
+  border-radius: 25px;
+  background-color: darkgray;
+  transition: background-color 0.15s ease-in;
+}
+
+.toggle-control input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.toggle-control .control:after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 25px;
+  background: white;
+  transition: left 0.15s ease-in;
+}
+
+.toggle-control input:checked ~ .control {
+  background-color: dodgerblue;
+}
+
+.toggle-control input:checked ~ .control:after {
+  left: 24px;
+}
+
+.toggle-control span:not(.control) {
+  padding-left: 8px;
+}
+
+.container {
+  padding: 10px;
+}
+
+.title {
+  white-space: nowrap;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 700;
+}
