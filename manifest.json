@@ -9,7 +9,8 @@
       "matches": ["https://*.stackoverflow.com/*"],
       "css": ["contentScript/styles.css"],
       "js": [
-        "contentScript/spoilerHiders.js",
+        "contentScript/constants.js",
+        "contentScript/spoilerHiding.js",
         "contentScript/updateState.js",
         "contentScript/main.js"
       ]

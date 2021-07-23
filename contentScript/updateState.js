@@ -1,7 +1,7 @@
 function updateState(state) {
   if (state) {
-    hideSpoilers()
+    hideAllSpoilerElements()
   } else {
-    showSpoilers()
+    revealAllSpoilerElements()
   }
 }
