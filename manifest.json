@@ -6,7 +6,7 @@
   "permissions": ["storage", "activeTab", "scripting"],
   "content_scripts": [
     {
-      "matches": ["https://*.stackoverflow.com/*"],
+      "matches": ["https://www.wrc.com/*"],
       "css": ["contentScript/styles.css"],
       "js": [
         "contentScript/constants.js",
