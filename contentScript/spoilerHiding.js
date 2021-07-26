@@ -1,68 +1,74 @@
-let replacements = []
+// Array of { original, revealer }
+let hiddenSpoilerMaps = []
 
 function hideAllSpoilerElements() {
   spoilerElementsSelectors.forEach((selector) => {
-    hideSpoilerElement(
-      document.querySelector(selector),
-      spoilerElementsOptions[selector] || {}
-    )
+    hideSpoilerElement(document.querySelector(selector))
   })
 }
 
 function revealAllSpoilerElements() {
-  replacements.forEach(({ original, replacement }) => {
-    replacement.replaceWith(original)
-  })
-
-  replacements = []
+  for (let i = hiddenSpoilerMaps.length - 1; i >= 0; i--) {
+    revealSpoilerFromMapIndex(i)
+  }
 }
 
-function hideSpoilerElement(original, options) {
+function hideSpoilerElement(original) {
   if (!original) {
     return
   }
 
-  const replacement = buildSpoilerRevealer(original, options)
+  const revealer = buildSpoilerRevealer(original)
 
-  original.replaceWith(replacement)
+  original.classList.add(spoilerClass)
 
-  replacements.push({ original, replacement })
+  document.body.appendChild(revealer)
+
+  hiddenSpoilerMaps.push({ original, revealer })
 }
 
-function revealSpoilerElement(replacement) {
-  const index = replacements.findIndex(replacement)
+function revealSpoiler(spoilerRevealer) {
+  const index = hiddenSpoilerMaps.findIndex(
+    (map) => map.revealer === spoilerRevealer
+  )
 
   if (index >= 0) {
-    replacement.replaceWith(replacements[index].original)
-
-    replacements.splice(index, 1)
+    revealSpoilerFromMapIndex(index)
   }
 }
 
-function buildSpoilerRevealer(originalElement, options = {}) {
+function revealSpoilerFromMapIndex(index) {
+  document.body.removeChild(hiddenSpoilerMaps[index].revealer)
+
+  hiddenSpoilerMaps[index].original.classList.remove(spoilerClass)
+
+  hiddenSpoilerMaps.splice(index, 1)
+}
+
+function buildSpoilerRevealer(originalElement) {
   const spoilerRevealer = document.createElement('div')
 
   spoilerRevealer.classList.add('spoiler-revealer')
 
-  if (options.classes && options.classes.length) {
-    spoilerRevealer.classList.add(...options.classes)
-  }
+  // Set its and position size to the same as the original element
+  const originalRect = originalElement.getBoundingClientRect()
 
-  // Set its size to the same as the original element's
-  spoilerRevealer.style.width = originalElement.offsetWidth + 'px'
-  spoilerRevealer.style.height = originalElement.offsetHeight + 'px'
+  spoilerRevealer.style.width = originalRect.width + 'px'
+  spoilerRevealer.style.height = originalRect.height + 'px'
+  spoilerRevealer.style.left = originalRect.x + window.scrollX + 'px'
+  spoilerRevealer.style.top = originalRect.y + window.scrollY + 'px'
 
   const spoilerRevealButton = document.createElement('button')
 
   spoilerRevealer.appendChild(spoilerRevealButton)
 
   spoilerRevealButton.appendChild(buildSpoilerIcon())
-  spoilerRevealButton.append('Spoiler! Click to reveal')
+  spoilerRevealButton.append('Spoiler!')
 
   spoilerRevealButton.classList.add('spoiler-reveal-button')
 
   spoilerRevealButton.addEventListener('click', () => {
-    spoilerRevealer.replaceWith(originalElement)
+    revealSpoiler(spoilerRevealer)
   })
 
   return spoilerRevealer
