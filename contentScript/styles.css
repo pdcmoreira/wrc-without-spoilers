@@ -1,4 +1,10 @@
-.spoiler-reveal-button {
+.spoiler-revealer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spoiler-revealer > .spoiler-reveal-button {
   display: flex;
   align-items: center;
   border: none;
@@ -12,13 +18,17 @@
   cursor: zoom-in;
 }
 
-.spoiler-reveal-button > .spoiler-icon {
+.spoiler-revealer > .spoiler-reveal-button > .spoiler-icon {
   margin-right: 10px;
 }
 
-.spoiler-reveal-button:hover {
+.spoiler-revealer > .spoiler-reveal-button:hover {
   background: white;
   color: rgb(64, 64, 64) !important;
   box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
   transition: all 0.3s ease 0s;
+}
+
+.spoiler-revealer.top {
+  align-items: flex-start;
 }

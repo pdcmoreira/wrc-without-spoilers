@@ -2,7 +2,10 @@ let replacements = []
 
 function hideAllSpoilerElements() {
   spoilerElementsSelectors.forEach((selector) => {
-    hideSpoilerElement(document.querySelector(selector))
+    hideSpoilerElement(
+      document.querySelector(selector),
+      spoilerElementsOptions[selector] || {}
+    )
   })
 }
 
@@ -14,10 +17,12 @@ function revealAllSpoilerElements() {
   replacements = []
 }
 
-function hideSpoilerElement(original) {
-  const replacement = buildSpoilerRevealer((spoilerRevealer) => {
-    spoilerRevealer.replaceWith(original)
-  })
+function hideSpoilerElement(original, options) {
+  if (!original) {
+    return
+  }
+
+  const replacement = buildSpoilerRevealer(original, options)
 
   original.replaceWith(replacement)
 
@@ -34,16 +39,30 @@ function revealSpoilerElement(replacement) {
   }
 }
 
-function buildSpoilerRevealer(onClick) {
-  const spoilerRevealer = document.createElement('button')
+function buildSpoilerRevealer(originalElement, options = {}) {
+  const spoilerRevealer = document.createElement('div')
 
-  spoilerRevealer.appendChild(buildSpoilerIcon())
-  spoilerRevealer.append('Spoiler! Click to reveal')
+  spoilerRevealer.classList.add('spoiler-revealer')
 
-  spoilerRevealer.classList.add('spoiler-reveal-button')
+  if (options.classes && options.classes.length) {
+    spoilerRevealer.classList.add(...options.classes)
+  }
 
-  spoilerRevealer.addEventListener('click', () => {
-    onClick(spoilerRevealer)
+  // Set its size to the same as the original element's
+  spoilerRevealer.style.width = originalElement.offsetWidth + 'px'
+  spoilerRevealer.style.height = originalElement.offsetHeight + 'px'
+
+  const spoilerRevealButton = document.createElement('button')
+
+  spoilerRevealer.appendChild(spoilerRevealButton)
+
+  spoilerRevealButton.appendChild(buildSpoilerIcon())
+  spoilerRevealButton.append('Spoiler! Click to reveal')
+
+  spoilerRevealButton.classList.add('spoiler-reveal-button')
+
+  spoilerRevealButton.addEventListener('click', () => {
+    spoilerRevealer.replaceWith(originalElement)
   })
 
   return spoilerRevealer
