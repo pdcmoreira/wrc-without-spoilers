@@ -18,11 +18,11 @@ function hideSpoilerElement(original) {
     return
   }
 
-  const revealer = buildSpoilerRevealer(original)
-
   original.classList.add(spoilerClass)
 
-  document.body.appendChild(revealer)
+  const revealer = buildSpoilerRevealer(original)
+
+  revealer.mount()
 
   hiddenSpoilerMaps.push({ original, revealer })
 }
@@ -38,7 +38,7 @@ function revealSpoiler(spoilerRevealer) {
 }
 
 function revealSpoilerFromMapIndex(index) {
-  document.body.removeChild(hiddenSpoilerMaps[index].revealer)
+  hiddenSpoilerMaps[index].revealer.unmount()
 
   hiddenSpoilerMaps[index].original.classList.remove(spoilerClass)
 
@@ -46,32 +46,61 @@ function revealSpoilerFromMapIndex(index) {
 }
 
 function buildSpoilerRevealer(originalElement) {
-  const spoilerRevealer = document.createElement('div')
+  const revealerElement = document.createElement('div')
 
-  spoilerRevealer.classList.add('spoiler-revealer')
+  revealerElement.classList.add('spoiler-revealer')
 
-  // Set its and position size to the same as the original element
-  const originalRect = originalElement.getBoundingClientRect()
+  // Observe the original element and update the revealer's size and position
+  // to match it
 
-  spoilerRevealer.style.width = originalRect.width + 'px'
-  spoilerRevealer.style.height = originalRect.height + 'px'
-  spoilerRevealer.style.left = originalRect.x + window.scrollX + 'px'
-  spoilerRevealer.style.top = originalRect.y + window.scrollY + 'px'
+  function updateSizeAndPosition(rect) {
+    revealerElement.style.width = rect.width + 'px'
+    revealerElement.style.height = rect.height + 'px'
+    revealerElement.style.left = rect.x + window.scrollX + 'px'
+    revealerElement.style.top = rect.y + window.scrollY + 'px'
+  }
+
+  const resizeObserver = new ResizeObserver((entries) => {
+    // Can't use entries[0].contentRect because the position is not calculated
+    // correctly, maybe because of margin and padding
+
+    updateSizeAndPosition(entries[0].target.getBoundingClientRect())
+  })
+
+  updateSizeAndPosition(originalElement.getBoundingClientRect())
 
   const spoilerRevealButton = document.createElement('button')
 
-  spoilerRevealer.appendChild(spoilerRevealButton)
+  revealerElement.appendChild(spoilerRevealButton)
 
   spoilerRevealButton.appendChild(buildSpoilerIcon())
   spoilerRevealButton.append('Spoiler!')
 
   spoilerRevealButton.classList.add('spoiler-reveal-button')
 
+  function mount() {
+    document.body.appendChild(revealerElement)
+
+    resizeObserver.observe(originalElement)
+  }
+
+  function unmount() {
+    resizeObserver.disconnect()
+
+    document.body.removeChild(revealerElement)
+  }
+
+  const revealer = {
+    element: revealerElement,
+    mount,
+    unmount
+  }
+
   spoilerRevealButton.addEventListener('click', () => {
-    revealSpoiler(spoilerRevealer)
+    revealSpoiler(revealer)
   })
 
-  return spoilerRevealer
+  return revealer
 }
 
 function buildSpoilerIcon() {
