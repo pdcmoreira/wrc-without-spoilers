@@ -1,6 +1,6 @@
 {
   "name": "wrc-without-spoilers",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "description": "Hide spoilers on the WRC platform.",
   "type": "module",
   "scripts": {

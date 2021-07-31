@@ -1,21 +1,13 @@
 {
   "name": "WRC Without Spoilers",
   "description": "Hide spoilers on the WRC platform.",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "manifest_version": 3,
-  "permissions": [
-    "storage",
-    "activeTab",
-    "scripting"
-  ],
+  "permissions": ["storage", "activeTab", "scripting"],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.wrc.com/*"
-      ],
-      "css": [
-        "./contentScript/styles.css"
-      ],
+      "matches": ["https://www.wrc.com/*"],
+      "css": ["./contentScript/styles.css"],
       "js": [
         "./contentScript/constants.js",
         "./contentScript/spoilerHiding.js",
