@@ -1,0 +1,19 @@
+{
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    },
+    {
+      "filename": "package-lock.json",
+      "type": "json"
+    },
+    {
+      "filename": "src/manifest.json",
+      "type": "json"
+    }
+  ],
+  "scripts": {
+    "postbump": "node make-release && git add ."
+  }
+}
