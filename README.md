@@ -1,3 +1,1 @@
-# TODO:
-
-- conventional commits (try again)
+Hide spoilers on the WRC platform.
