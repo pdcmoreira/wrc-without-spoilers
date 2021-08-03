@@ -1,7 +1,7 @@
 {
   "name": "WRC Without Spoilers",
   "description": "Hide spoilers on the WRC platform.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "manifest_version": 3,
   "permissions": [
     "storage"
