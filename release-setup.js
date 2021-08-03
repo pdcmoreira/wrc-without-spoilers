@@ -26,8 +26,8 @@ export default {
 
   // TODO: do I need the ./ ?
   transformManifest: manifest => {
-    manifest.content_scripts[0].js = './contentScript.js'
-    manifest.content_scripts[0].css = './contentScript.css'
+    manifest.content_scripts[0].js = ['./contentScript.js']
+    manifest.content_scripts[0].css = ['./contentScript.css']
 
     manifest.action.default_popup = './popup.html'
 
